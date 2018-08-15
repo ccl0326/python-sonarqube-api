@@ -319,10 +319,12 @@ class SonarAPIHandler(object):
             metrics.extend(['new_{}'.format(m) for m in metrics])
         if include_modules:
             params['qualifiers'] = 'TRK,BRC'
-        params['metrics'] = ','.join(metrics)
+        url = self.RESOURCES_ENDPOINT
+        if metrics:
+            url = url + '?metrics=' + ','.join(metrics)
 
         # Make the call
-        res = self._make_call('get', self.RESOURCES_ENDPOINT, **params).json()
+        res = self._make_call('get', url, **params).json()
 
         # Iterate and yield results
         for prj in res:
